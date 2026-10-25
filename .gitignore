@@ -1,0 +1,33 @@
+# Secrets & local env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa*
+kubeconfig*
+!kubeconfig*.example
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Tool caches
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+bin/
+dist/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Cluster / tooling local data
+.kind/
+.k3d/
+*.log
