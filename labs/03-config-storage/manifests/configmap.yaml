@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lab03-web-config
+data:
+  APP_MESSAGE: "hello from ConfigMap"
+  APP_ENV: "lab03"

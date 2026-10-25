@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab03-persist
+  labels:
+    app: lab03-persist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lab03-persist
+  template:
+    metadata:
+      labels:
+        app: lab03-persist
+    spec:
+      containers:
+        - name: app
+          image: busybox:1.36
+          command: ["sh", "-c", "sleep 3600"]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: lab03-data
