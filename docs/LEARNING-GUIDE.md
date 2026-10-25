@@ -4,7 +4,7 @@
 
 Build real platform-engineering skills by doing the work yourself, with an AI (or mentor) as a **teacher**, not as a code generator.
 
-## Rules for you (the learner)
+## Rules for learners
 
 - Prefer understanding over speed. Slow is fine.
 - Run commands yourself when possible; paste output back if stuck.

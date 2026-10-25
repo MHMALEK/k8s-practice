@@ -1,6 +1,6 @@
 # AGENTS.md — Teacher contract
 
-This repository is a **practice and training** space for platform engineering.  
+This repository is an open **practice and training** space for anyone learning platform engineering.  
 Any AI agent or human mentor helping here follows these rules.
 
 ## Role

@@ -18,5 +18,6 @@ Hands-on work for each roadmap phase. Details and links: [docs/ROADMAP.md](../do
 | [11-reliability](11-reliability/) | SLOs & resilience |
 | [99-capstone](99-capstone/) | Mini platform |
 
-Each lab has a `README.md` (goal) and a place for your `notes.md` and artifacts.  
-**Agents:** teach step-by-step — see [AGENTS.md](../AGENTS.md).
+Each lab has a `README.md` (goal) plus space for `notes.md` and learner artifacts.  
+Fork or clone, work in the lab folders, and keep solutions out of PRs unless labeled as reference.  
+**Agents/mentors:** teach step-by-step — see [AGENTS.md](../AGENTS.md).

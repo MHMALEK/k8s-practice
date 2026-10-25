@@ -1,6 +1,6 @@
 # Platform Engineering Learning Roadmap
 
-End-to-end path from foundations → Kubernetes → platform engineering.  
+End-to-end path from foundations → Kubernetes → platform engineering, for anyone learning the craft.  
 Use with [LEARNING-GUIDE.md](LEARNING-GUIDE.md). Labs live under [`labs/`](../labs/).
 
 **How to use this doc**
@@ -8,7 +8,7 @@ Use with [LEARNING-GUIDE.md](LEARNING-GUIDE.md). Labs live under [`labs/`](../la
 1. Work **one phase at a time**. Do not skip prerequisites.
 2. For each item: learn → practice in a lab → tick the checkbox.
 3. Prefer official docs and the linked free courses over random blogs.
-4. Ask an agent: *“I’m on Phase N / step X — teach me the next step.”*
+4. With a mentor or AI teacher: *“I’m on Phase N / step X — teach me the next step.”*
 5. Certs are optional; hands-on labs are the real goal.
 
 **Estimated total:** ~6–12 months at a steady pace (part-time). Adjust freely.
