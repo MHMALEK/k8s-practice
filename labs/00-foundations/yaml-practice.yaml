@@ -1,0 +1,9 @@
+# Top level is a MAP (named keys → values)
+apiVersion: v1
+kind: ConfigMap
+metadata: # map
+  name: demo
+  labels: # map nested inside a map
+    app: demo
+data: # map of keys → strings
+  greeting: hello

@@ -1,13 +1,15 @@
 # Lab 00 notes
 
 ## Process
-(write your definition after the experiment below)
+a proccess is prgram that run by operating system.
 
 ## Port
-(todo)
+like an address of a proccesses in a machine that you can talk to
 
 ## DNS
-(todo)
+translate name to IP address or more. computre ask resolver and resolver tell which IP address belong to that service.
 
 ## YAML map vs list
-(todo)
+- Map: named fields (`key: value`), e.g. `metadata:` with `name` and `labels`.
+- List: ordered items marked with `-`, e.g. `containers:` is a list of container maps.
+- Rule of thumb: if you see `-` under a key, that key holds a list; if you only see `key: value`, it's a map.

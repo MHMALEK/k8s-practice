@@ -1,0 +1,6 @@
+# containers is a LIST of MAPs (each "-" starts one item)
+containers:
+  - name: web
+    image: nginx
+  - name: sidecar
+    image: busybox

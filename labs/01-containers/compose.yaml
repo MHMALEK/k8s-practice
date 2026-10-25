@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    image: lab01-web:dev
+    ports:
+      - "8080:80"
+  client:
+    image: busybox:1.36
+    depends_on:
+      - web
+    command: ["wget", "-qO-", "http://web/"]
