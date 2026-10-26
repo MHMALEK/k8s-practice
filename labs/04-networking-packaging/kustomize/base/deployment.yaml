@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab04-kustomize
+  labels:
+    app: lab04-kustomize
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lab04-kustomize
+  template:
+    metadata:
+      labels:
+        app: lab04-kustomize
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
