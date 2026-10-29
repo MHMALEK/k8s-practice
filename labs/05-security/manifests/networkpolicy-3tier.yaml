@@ -1,0 +1,145 @@
+# 3-tier demo: frontend → api → db
+# Baseline deny-all ingress for these apps, then explicit allows.
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lab05-frontend
+  labels:
+    app: lab05-frontend
+    tier: frontend
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27-alpine
+      ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lab05-api-tier
+  labels:
+    app: lab05-api-tier
+    tier: api
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27-alpine
+      ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lab05-db
+  labels:
+    app: lab05-db
+    tier: db
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27-alpine
+      ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab05-frontend
+spec:
+  selector:
+    app: lab05-frontend
+  ports:
+    - port: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab05-api-tier
+spec:
+  selector:
+    app: lab05-api-tier
+  ports:
+    - port: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab05-db
+spec:
+  selector:
+    app: lab05-db
+  ports:
+    - port: 80
+---
+# Deny all ingress to the three tiers (locks them down)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: lab05-tier-deny-ingress
+spec:
+  podSelector:
+    matchExpressions:
+      - key: tier
+        operator: In
+        values: [frontend, api, db]
+  policyTypes:
+    - Ingress
+  ingress: []
+---
+# Allow: anyone in the namespace → frontend:80 (simulates "edge" / users)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: lab05-allow-to-frontend
+spec:
+  podSelector:
+    matchLabels:
+      tier: frontend
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 80
+---
+# Allow: frontend → api:80
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: lab05-allow-frontend-to-api
+spec:
+  podSelector:
+    matchLabels:
+      tier: api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              tier: frontend
+      ports:
+        - protocol: TCP
+          port: 80
+---
+# Allow: api → db:80
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: lab05-allow-api-to-db
+spec:
+  podSelector:
+    matchLabels:
+      tier: db
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              tier: api
+      ports:
+        - protocol: TCP
+          port: 80
