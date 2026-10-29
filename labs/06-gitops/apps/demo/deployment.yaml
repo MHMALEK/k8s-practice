@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab06-demo
+  labels:
+    app: lab06-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab06-demo
+  template:
+    metadata:
+      labels:
+        app: lab06-demo
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
