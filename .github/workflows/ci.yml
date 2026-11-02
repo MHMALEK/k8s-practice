@@ -6,7 +6,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/k8s-practice-demo
+  IMAGE_NAME: ghcr.io/mhmalek/k8s-practice-demo
 
 jobs:
   validate:
