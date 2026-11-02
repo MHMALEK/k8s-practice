@@ -1,0 +1,92 @@
+name: platform-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/k8s-practice-demo
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt & validate (Lab 08)
+        working-directory: labs/08-iac-cloud/terraform
+        run: |
+          terraform fmt -check
+          terraform init -backend=false
+          terraform validate
+
+      - name: Install PyYAML
+        run: pip3 install --user pyyaml
+
+      - name: Validate Helm & Kustomize & GitOps manifests
+        run: |
+          helm lint labs/04-networking-packaging/lab04-web
+          helm template test labs/04-networking-packaging/lab04-web > /dev/null
+          kubectl kustomize labs/04-networking-packaging/kustomize/overlays/dev > /dev/null
+          python3 -c 'import glob, yaml; files=[f for f in glob.glob("labs/**/*.yaml", recursive=True) if "/templates/" not in f]; [list(yaml.safe_load_all(open(f))) for f in files]; print(f"Validated {len(files)} YAML manifests offline")'
+
+  build-and-scan:
+    runs-on: ubuntu-latest
+    needs: validate
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: meta
+        run: echo "tag=sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Build image
+        run: |
+          docker build -t "${IMAGE_NAME}:${{ steps.meta.outputs.tag }}" labs/09-cicd/app
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
+          severity: CRITICAL
+          exit-code: "1"
+          ignore-unfixed: true
+
+      # Push + GitOps bump only on main (PRs build+scan only)
+      - name: Login to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker push "${IMAGE_NAME}:${{ steps.meta.outputs.tag }}"
+
+      - name: Bump GitOps deployment image tag
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          FILE=labs/06-gitops/apps/demo/deployment.yaml
+          NEW="${IMAGE_NAME}:${{ steps.meta.outputs.tag }}"
+          # Replace the container image line (keeps indent)
+          sed -i.bak -E "s|(image: ).*|\\1${NEW}|" "$FILE"
+          rm -f "${FILE}.bak"
+          if git diff --quiet -- "$FILE"; then
+            echo "No image change needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$FILE"
+          git commit -m "chore(gitops): bump demo image to ${{ steps.meta.outputs.tag }}"
+          git push

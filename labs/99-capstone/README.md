@@ -19,6 +19,15 @@ Wire a small but complete platform loop:
 
 Someone else (or future you) follows your golden-path doc and ships hello-world without asking you.
 
+## Artifacts in this folder
+
+- [GOLDEN-PATH.md](./GOLDEN-PATH.md) — day-1 runbook wiring Labs 04–11
+- [METRICS.md](./METRICS.md) — reuse Lab 07 for basic signals / SLO tie-in
+
+## Remaining proof (optional)
+
+Push `main` so GitHub Actions runs validate → build/scan → GitOps image bump end-to-end.
+
 ## Start with the teacher
 
 > “Capstone — help me inventory what I already have from earlier labs, then the first gap only.”
